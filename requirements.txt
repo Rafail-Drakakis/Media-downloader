@@ -1,0 +1,7 @@
+tk
+yt-dlp
+CTkMessagebox
+customtkinter
+ffmpeg
+ffprobe
+pillow
