@@ -75,7 +75,7 @@ def get_playlist_info(playlist_url):
             for title in playlist_titles:
                 title = sanitize_title(title)
                 titles.append(title)
-
+        playlist_title = sanitize_title(playlist_title)
     except yt_dlp.utils.DownloadError as e:
         show_error("There was an error while downloading the playlist.")
         return None, None
