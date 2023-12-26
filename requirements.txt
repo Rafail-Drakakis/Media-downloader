@@ -1,7 +1,7 @@
-tk
-yt-dlp
 CTkMessagebox
 customtkinter
+yt-dlp
 ffmpeg
 ffprobe
 pillow
+tk

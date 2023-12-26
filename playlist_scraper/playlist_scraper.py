@@ -22,8 +22,8 @@ def sanitize_titles(titles):
         sanitized_title = ''.join(['_' if char in prohibited_chars else char for char in title])
         sanitized_titles.append(sanitized_title)
     return sanitized_titles
-
-def main():
+      
+if __name__ == "__main__":
     playlist_url = input("Give the playlist URL: ")
     titles, urls = get_playlist_info(playlist_url)
         
@@ -34,6 +34,3 @@ def main():
     with open("links.txt", "w", encoding="utf-8") as file:
         for url in urls:
             file.write(url + "\n")
-            
-if __name__ == "__main__":
-    main()
