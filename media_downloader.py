@@ -47,15 +47,16 @@ def get_link_info(search_query):
 
 def replace_extensions(in_download_path, download_path):
     """
-    The function `replace_extensions` renames webm and mkv files to mp4 format in the specified download
-    path.
+    The function `replace_extensions` takes in a download path and replaces the file extensions of any
+    webm or mkv files in that path with mp4.
     
     :param in_download_path: The `in_download_path` parameter is the path to the directory where the
-    downloaded files are located. This is the directory from which the script will search for files with
-    the extensions `.webm` and `.mkv`
+    video files are currently located. This is the directory from which the video files will be
+    processed and have their extensions replaced
     :param download_path: The `download_path` parameter is the path where the downloaded files are
-    stored. It is the directory where the `webm` and `mkv` files are located
+    stored. It is the directory where the files with the extensions `.webm` and `.mkv` are located
     """
+    # Define the list of video extensions to handle
     webm_file = [filename for filename in os.listdir(in_download_path) if filename.endswith('.webm')]
     mkv_file = [filename for filename in os.listdir(in_download_path) if filename.endswith('.mkv')]
 
@@ -104,7 +105,6 @@ def get_playlist_info(playlist_url):
         show_error("There was an error while downloading the playlist.")
         return None, None
     return playlist_title, titles, urls
-
 
 def download_from_file(download_video, video_resolution="best"):
     """
@@ -266,7 +266,6 @@ def download_link(url, title, download_video, video_resolution, download_path=No
         show_error(f"An error occurred: {str(e)}")
     return False
 
-
 def download_subtitles(url, download_path):
     """
     The function `download_subtitles` downloads subtitles for a given video URL and saves them to a
@@ -357,7 +356,6 @@ def sanitize_title(title):
     sanitized_title = ''.join(['_' if char in prohibited_chars else char for char in title])
     return sanitized_title
 
-
 def show_error(output):
     """
     The function "show_error" displays an error message using a message box.
@@ -365,7 +363,6 @@ def show_error(output):
     :param output: The error message that you want to display
     """
     CTkMessagebox(title="Error", message=output, icon="cancel")
-
 
 def show_success(output):
     """
@@ -376,7 +373,6 @@ def show_success(output):
     can be a string or any other data type that can be converted to a string
     """
     CTkMessagebox(title="Success", message=output, icon="check", option_1="Thanks")
-
 
 def update_progress(data):
     """
@@ -391,7 +387,6 @@ def update_progress(data):
 
         if total_bytes and downloaded_bytes:
             progress_bar_var.set(downloaded_bytes / total_bytes * 100)
-
 
 def start_download(download_option, video_resolution="best"):
     """
@@ -431,7 +426,6 @@ def start_download(download_option, video_resolution="best"):
 
     download_thread = threading.Thread(target=target_function, args=(target_args))
     download_thread.start()
-
 
 if __name__ == "__main__":
     app = customtkinter.CTk()
