@@ -11,7 +11,6 @@ command to make an exe file using pyinstaller:
 pyinstaller --name=MediaDownloader --onefile --windowed --icon=icon.ico --upx-dir=/home/rafail/Documents/upx --collect-all customtkinter --collect-all CTkMessagebox --collect-all ffmpeg --hidden-import='PIL._tkinter_finder' media_downloader.py
 """
 
-
 def get_link_info(search_query):
     """
     The `get_link_info` function extracts information (title and URL) from a YouTube video given a
@@ -46,6 +45,31 @@ def get_link_info(search_query):
         show_error(f"An error occurred: {str(e)}")
         return None
 
+def replace_extensions(in_download_path, download_path):
+    """
+    The function `replace_extensions` renames webm and mkv files to mp4 format in the specified download
+    path.
+    
+    :param in_download_path: The `in_download_path` parameter is the path to the directory where the
+    downloaded files are located. This is the directory from which the script will search for files with
+    the extensions `.webm` and `.mkv`
+    :param download_path: The `download_path` parameter is the path where the downloaded files are
+    stored. It is the directory where the `webm` and `mkv` files are located
+    """
+    webm_file = [filename for filename in os.listdir(in_download_path) if filename.endswith('.webm')]
+    mkv_file = [filename for filename in os.listdir(in_download_path) if filename.endswith('.mkv')]
+
+    if webm_file:
+        if download_path != None:
+            webm_file = download_path + ".webm"
+        mp4_filename = webm_file.replace('.webm', '.mp4')
+        os.rename(webm_file, mp4_filename)
+    
+    if mkv_file:
+        if download_path != None:
+            mkv_file = download_path + ".mkv"
+        mp4_filename = mkv_file.replace('.mkv', '.mp4')
+        os.rename(mkv_file, mp4_filename)
 
 def get_playlist_info(playlist_url):
     """
@@ -116,7 +140,6 @@ def download_from_file(download_video, video_resolution="best"):
 
     else:
         show_error("provide a file")
-
 
 def download_link_menu(input_path_or_url, download_video, video_resolution):
     """
@@ -230,14 +253,8 @@ def download_link(url, title, download_video, video_resolution, download_path=No
             youtube_dlp_instance.download([url])
 
         if download_video:
-            webm_file = [filename for filename in os.listdir(in_download_path) if filename.endswith('.webm')]
-
-            if webm_file:
-                if download_path != None:
-                    webm_file = download_path + ".webm"
-                mp4_filename = webm_file.replace('.webm', '.mp4')
-                os.rename(webm_file, mp4_filename)
-
+            replace_extensions(in_download_path, download_path)
+            
             if language_menu.get() != None and language_menu.get() != "Select":
                 download_subtitles(url, download_path)
 
