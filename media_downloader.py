@@ -93,15 +93,14 @@ def get_playlist_info(playlist_url):
         with yt_dlp.YoutubeDL(youtube_dlp_options) as yt_downloader:
             data = yt_downloader.extract_info(playlist_url, download=False)
             playlist_title = data.get('title', 'Untitled') + ".txt"
-            playlist_titles = [entry['title'] for entry in data.get('entries', []) if
-                               'title' in entry and 'url' in entry]
+            playlist_titles = [entry['title'] for entry in data.get('entries', []) if 'title' in entry and 'url' in entry]
             urls = [entry['url'] for entry in data.get('entries', []) if 'title' in entry and 'url' in entry]
             titles = []
             for title in playlist_titles:
                 title = sanitize_title(title)
                 titles.append(title)
         playlist_title = sanitize_title(playlist_title)
-    except yt_dlp.utils.DownloadError as e:
+    except yt_dlp.DownloadError as e:
         show_error("There was an error while downloading the playlist.")
         return None, None
     return playlist_title, titles, urls
@@ -205,7 +204,7 @@ def download_link(url, title, download_video, video_resolution, download_path=No
             download_path = filedialog.askdirectory()
             if not download_path:
                 show_error("Select a save location")
-                return
+                return False
 
         in_download_path = download_path
         download_path = os.path.join(download_path, f"{title}")
@@ -257,14 +256,26 @@ def download_link(url, title, download_video, video_resolution, download_path=No
             
             if language_menu.get() != None and language_menu.get() != "Select":
                 download_subtitles(url, download_path)
-
         return True
-
-    except yt_dlp.utils.DownloadError as e:
-        show_error(f"Download error: {str(e)}")
+    
     except Exception as e:
         show_error(f"An error occurred: {str(e)}")
+        write_in_log(url)
+        delete_corrupt_file(in_download_path, title)
     return False
+
+def delete_corrupt_file(directory, title):
+    # List all files in the directory
+    files = os.listdir(directory)
+
+    # Iterate through the files and delete those that start with the specified title
+    for file_name in files:
+        if file_name.startswith(title):
+            file_path = os.path.join(directory, file_name)
+            try:
+                os.remove(file_path)
+            except Exception as e:
+                print(f"Error deleting {file_path}: {str(e)}")
 
 def download_subtitles(url, download_path):
     """
@@ -315,6 +326,7 @@ def download_subtitles(url, download_path):
 
     except Exception as e:
         show_error(f"An error occurred: {str(e)}")
+        return False
 
 def download_playlist(filename, titles, urls, download_video, video_resolution): 
     """
@@ -343,6 +355,11 @@ def download_playlist(filename, titles, urls, download_video, video_resolution):
     for url, title in zip(urls, titles):
         download_path = folder_name
         download_link(url, title, download_video, video_resolution, download_path)
+    return True
+
+def write_in_log(url):
+    with open('log.txt', 'a') as log_file:
+        log_file.write(url + '\n')
 
 def sanitize_title(title):
     """
@@ -362,7 +379,8 @@ def show_error(output):
 
     :param output: The error message that you want to display
     """
-    CTkMessagebox(title="Error", message=output, icon="cancel")
+    print(output)
+    #CTkMessagebox(title="Error", message=output, icon="cancel")
 
 def show_success(output):
     """
