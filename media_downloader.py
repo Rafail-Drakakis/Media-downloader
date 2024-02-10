@@ -179,73 +179,53 @@ def download_link_menu(input_path_or_url, download_video, video_resolution):
 
 def download_link(url, title, download_video, video_resolution, download_path=None):
     """
-    The function `download_link` downloads a video or audio file from a given URL and saves it to a
-    specified location with the specified title and resolution.
+    The `download_link` function downloads a video or audio file from a given URL, with options for
+    video resolution and download path.
     
-    :param url: The URL of the video that you want to download
-    :param title: The title parameter is a string that represents the title of the video that will be
-    downloaded
-    :param download_video: The `download_video` parameter is a boolean value that determines whether to
-    download the video or just the audio. If `download_video` is `True`, the function will download both
-    the audio and video of the specified resolution. If `download_video` is `False`, the function will
-    only download the
+    :param url: The URL of the video or audio file you want to download
+    :param title: The title parameter is a string that represents the title of the video or audio file
+    that will be downloaded
+    :param download_video: A boolean value indicating whether to download the video or just the audio
     :param video_resolution: The `video_resolution` parameter is used to specify the desired resolution
-    of the video to be downloaded. It can be set to a specific resolution value (e.g., "720p", "1080p")
-    or to "best" to download the best available resolution
-    :param download_path: The `download_path` parameter is the path where the downloaded video or audio
-    file will be saved. It is an optional parameter, so if it is not provided, the user will be prompted
-    to select a save location using a file dialog. If the user cancels or does not select a save
-    location
+    of the downloaded video. It can take values such as "best" (for the best available resolution),
+    specific resolutions like "720" or "1080", or it can be left empty to download the best available
+    resolution
+    :param download_path: The download_path parameter is the path where the downloaded file will be
+    saved. If it is not provided, the user will be prompted to select a save location using a file
+    dialog
     :return: a boolean value. It returns True if the download is successful and False if there is an
     error during the download process.
     """
     try:
-        if download_path == None:
+        if download_path is None:
             download_path = filedialog.askdirectory()
             if not download_path:
                 show_error("Select a save location")
                 return False
 
         in_download_path = download_path
-        download_path = os.path.join(download_path, f"{title}")
+        download_path = os.path.join(download_path, title)
+
+        youtube_dlp_options = {
+            'outtmpl': f'{download_path}.%(ext)s',
+            'quiet': True,
+            'progress_hooks': [update_progress],
+        }
 
         if download_video:
             if video_resolution == "best":
-                youtube_dlp_options = {
-                    'outtmpl': f'{download_path}.%(ext)s',
-                    'format': 'bestaudio+bestvideo',
-                    'quiet': True,
-                    'progress_hooks': [update_progress],
-                }
-
-            elif video_resolution == " ":
-                youtube_dlp_options = {
-                    'outtmpl': f'{download_path}.%(ext)s',
-                    'format': 'best',
-                    'quiet': True,
-                    'progress_hooks': [update_progress],
-                }
-
+                youtube_dlp_options['format'] = 'bestaudio+bestvideo'
+            elif video_resolution:
+                youtube_dlp_options['format'] = f'bestvideo[height<={video_resolution}]+bestaudio/best[height<={video_resolution}]'
             else:
-                youtube_dlp_options = {
-                    'outtmpl': f'{download_path}.%(ext)s',
-                    'format': f'bestvideo[height<={video_resolution}]+bestaudio/best[height<={video_resolution}]',
-                    'quiet': True,
-                    'progress_hooks': [update_progress],
-                }
-
+                youtube_dlp_options['format'] = 'best'
         else:
-            youtube_dlp_options = {
-                'outtmpl': f'{download_path}.%(ext)s',
-                'format': 'bestaudio',  # Download the best available audio format
-                'quiet': True,
-                'postprocessors': [{
-                    'key': 'FFmpegExtractAudio',
-                    'preferredcodec': 'mp3',  # Convert audio to MP3 format
-                    'preferredquality': '192',  # Bitrate for the converted audio
-                }],
-                'progress_hooks': [update_progress],
-            }
+            youtube_dlp_options['format'] = 'bestaudio'
+            youtube_dlp_options['postprocessors'] = [{
+                'key': 'FFmpegExtractAudio',
+                'preferredcodec': 'mp3',
+                'preferredquality': '192',
+            }]
 
         with yt_dlp.YoutubeDL(youtube_dlp_options) as youtube_dlp_instance:
             current_title_label_var.set(title)
@@ -254,21 +234,21 @@ def download_link(url, title, download_video, video_resolution, download_path=No
         if download_video:
             replace_extensions(in_download_path, download_path)
             
-            if language_menu.get() != None and language_menu.get() != "Select":
+            if language_menu.get() and language_menu.get() != "Select":
                 download_subtitles(url, download_path)
+        
         return True
     
     except Exception as e:
         show_error(f"An error occurred: {str(e)}")
         write_in_log(url)
         delete_corrupt_file(in_download_path, title)
-    return False
+        return False
+
 
 def delete_corrupt_file(directory, title):
-    # List all files in the directory
     files = os.listdir(directory)
 
-    # Iterate through the files and delete those that start with the specified title
     for file_name in files:
         if file_name.startswith(title):
             file_path = os.path.join(directory, file_name)
@@ -379,8 +359,8 @@ def show_error(output):
 
     :param output: The error message that you want to display
     """
-    print(output)
-    #CTkMessagebox(title="Error", message=output, icon="cancel")
+    #print(output)
+    CTkMessagebox(title="Error", message=output, icon="cancel")
 
 def show_success(output):
     """
