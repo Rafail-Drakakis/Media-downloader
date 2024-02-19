@@ -242,7 +242,6 @@ def download_link(url, title, download_video, video_resolution, download_path=No
     except yt_dlp.utils.DownloadError as e:
         if "Requested format is not available" in str(e):
             if download_video:
-                # Execute command to download video using yt-dlp and os.system()
                 video_command = f'yt-dlp --format best --output "{download_path}.%(ext)s" "{url}"'
                 return_code = os.system(video_command)
                 if return_code != 0:
@@ -251,7 +250,6 @@ def download_link(url, title, download_video, video_resolution, download_path=No
                     delete_corrupt_file(in_download_path, title)
                     return False
             else:
-                # Execute command to download audio using yt-dlp and os.system()
                 audio_command = f'yt-dlp --extract-audio --audio-format mp3 --audio-quality 192K --output "{download_path}.%(ext)s" "{url}"'
                 return_code = os.system(audio_command)
                 if return_code != 0:
@@ -263,7 +261,7 @@ def download_link(url, title, download_video, video_resolution, download_path=No
         else:
             show_error(f"An error occurred: {str(e)}")
             write_in_log(url)
-        delete_corrupt_file(in_download_path, title)
+            delete_corrupt_file(in_download_path, title)
         return False
 
 def delete_corrupt_file(directory, title):
