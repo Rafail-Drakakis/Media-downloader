@@ -8,7 +8,7 @@ import os
 
 """
 command to make an exe file using pyinstaller:
-pyinstaller --name=MediaDownloader --onefile --windowed --icon=icon.ico --upx-dir=/home/rafail/Documents/upx --collect-all customtkinter --collect-all CTkMessagebox --collect-all ffmpeg --hidden-import='PIL._tkinter_finder' media_downloader.py
+pyinstaller --name=MediaDownloader --onefile --windowed --icon=icon.ico --collect-all customtkinter --collect-all CTkMessagebox --collect-all ffmpeg --hidden-import='PIL._tkinter_finder' media_downloader.py
 """
 
 def get_link_info(search_query):
