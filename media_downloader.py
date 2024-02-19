@@ -169,7 +169,7 @@ def download_link_menu(input_path_or_url, download_video, video_resolution):
 
     elif input_path_or_url.startswith(("https://www.instagram.com/", "https://www.facebook.com/")):
         title, url = get_link_info(input_path_or_url)
-        if download_link(url, title, download_video, " "):
+        if download_link(url, title, download_video, ""):
             show_success("Download complete")
 
     else:
@@ -239,12 +239,32 @@ def download_link(url, title, download_video, video_resolution, download_path=No
         
         return True
     
-    except Exception as e:
-        show_error(f"An error occurred: {str(e)}")
-        write_in_log(url)
+    except yt_dlp.utils.DownloadError as e:
+        if "Requested format is not available" in str(e):
+            if download_video:
+                # Execute command to download video using yt-dlp and os.system()
+                video_command = f'yt-dlp --format best --output "{download_path}.%(ext)s" "{url}"'
+                return_code = os.system(video_command)
+                if return_code != 0:
+                    show_error("Error occurred during video download.")
+                    write_in_log(url)
+                    delete_corrupt_file(in_download_path, title)
+                    return False
+            else:
+                # Execute command to download audio using yt-dlp and os.system()
+                audio_command = f'yt-dlp --extract-audio --audio-format mp3 --audio-quality 192K --output "{download_path}.%(ext)s" "{url}"'
+                return_code = os.system(audio_command)
+                if return_code != 0:
+                    show_error("Error occurred during audio download.")
+                    write_in_log(url)
+                    delete_corrupt_file(in_download_path, title)
+                    return False
+            return True
+        else:
+            show_error(f"An error occurred: {str(e)}")
+            write_in_log(url)
         delete_corrupt_file(in_download_path, title)
         return False
-
 
 def delete_corrupt_file(directory, title):
     files = os.listdir(directory)
