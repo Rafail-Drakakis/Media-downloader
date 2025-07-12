@@ -88,10 +88,3 @@ Install them via:
 ```bash
 pip install -r requirements.txt
 ```
-
----
-
-## License
-
-This software is licensed under the MIT License.  
-See the [LICENSE](LICENSE) file for more information.
