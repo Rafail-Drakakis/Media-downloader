@@ -1,53 +1,97 @@
-Media Downloader
+# Media Downloader
 
-Description
-A simple and user-friendly tool to download media from YouTube. It allows users to input a search query or a direct YouTube link, fetches the video's information, and downloads the media.
+A simple, user-friendly tool for downloading media from YouTube.  
+Users can input a search query or a direct YouTube link, view video details, and download the media.
 
-Installation and usage
-- On linux and Mac OS:
-1. Ensure you have Python 3.9 or above installed on your machine.
+---
+
+## Features
+
+- Search YouTube or paste direct links  
+- Preview video information before downloading  
+- Simple, cross-platform usage (Windows, macOS, Linux)
+
+---
+
+## Installation & Usage
+
+### Linux / macOS
+
+1. Make sure you have **Python 3.9+** installed.
 2. Clone this repository or download the source code.
-3. Navigate to the directory containing `media_downloader.py`.
-4. Install the required dependencies using the command: `pip install -r requirements.txt`
+3. Open a terminal and navigate to the directory containing `media_downloader.py`.
+4. Install the dependencies:
 
-Run the program using the following command: 
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+5. Run the application:
+
+   ```bash
+   python media_downloader.py
+   ```
+
+6. Follow the on-screen instructions to search and download media.
+
+---
+
+### Windows Setup
+
+1. Download the **ffmpeg** build from:  
+   https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z  
+2. Extract the folder and save it (preferably to `C:\ffmpeg`).
+
+#### Add ffmpeg to System PATH
+
+##### Windows 10 / Windows 8.1
+
+1. Right-click the Start button and select **System**.
+2. Click **Advanced system settings**.
+3. Go to the **Advanced** tab and click **Environment Variables...**.
+4. Select the variable named **Path** and click **Edit...**.
+5. Click **New** and enter:
+
+   ```
+   C:\ffmpeg\bin
+   ```
+
+6. Click **OK** to save changes and **restart your computer**.
+
+##### Windows 11
+
+1. Open **Settings** → **System** → **About**.
+2. Click **Advanced system settings**.
+3. Click **Environment Variables...**.
+4. Select the **Path** variable and click **Edit...**.
+5. Click **New** and enter:
+
+   ```
+   C:\ffmpeg\bin
+   ```
+
+6. Click **OK** and **restart your computer**.
+
+---
+
+## Dependencies
+
+The following Python packages are required:
+
+- `tkinter`
+- `customtkinter`
+- `yt_dlp`
+- `CTkMessagebox`
+
+Install them via:
+
+```bash
+pip install -r requirements.txt
 ```
-python media_downloader.py
-```
-Follow the on-screen instructions to search and download your desired media.
 
-- On windows:
+---
 
-1. Download as ffmpeg, the folder from this link. https://www.gyan.dev/ffmpeg/builds/ffmpeg-git-full.7z and save it in the C directory preferably as "ffmpeg".
-2. Right-click on the Start Button
+## License
 
-On Windows 10 (Also Windows 8.1)
-3. Select “System” from the context menu.
-4. Click “Advanced system settings”
-5. Go to the “Advanced” tab
-6. Click “Environment Variables…”
-7. Click variable called “Path” and click “Edit…”
-8. Click “New”
-9. Enter the path to the folder containing the binary you want on your PATH. For example, to add ffmpeg, add:
-C:\ffmpeg\bin (assuming you have saved the file in the C directory)
-10. Click “OK” to save the changes to your variables and restart your computer for the changes to take effect.
-
-On windows 11
-3.Open the Setting
-4.Under System, click on "About".
-5.Click on "Advanced system settings".
-6.Click "Environment Variables...".
-7.The environment variables panel shows up on the screen. ...
-8. Click “New”
-9. Enter the path to the folder containing the binary you want on your PATH. For example, to add ffmpeg, add:
-C:\ffmpeg\bin (assuming you have saved the file in the C directory)
-10. Click “OK” to save the changes to your variables and restart your computer for the changes to take effect.
-
-Dependencies
-- tkinter
-- customtkinter
-- yt_dlp
-- CTkMessagebox
-
-License
-This software is released under the MIT licence. For more details, refer to the LICENSE file in the repository.
+This software is licensed under the MIT License.  
+See the [LICENSE](LICENSE) file for more information.
