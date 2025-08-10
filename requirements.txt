@@ -1,7 +1,5 @@
-CTkMessagebox
-customtkinter
+PyQt5
 yt-dlp
 ffmpeg
 ffprobe
 pillow
-tk
