@@ -78,10 +78,8 @@ Users can input a search query or a direct YouTube link, view video details, and
 
 The following Python packages are required:
 
-- `tkinter`
-- `customtkinter`
+- `PyQt5`
 - `yt_dlp`
-- `CTkMessagebox`
 
 Install them via:
 
